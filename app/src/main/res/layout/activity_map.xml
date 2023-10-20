@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".MapActivity">
+
+    <ImageView
+        android:id="@+id/cafe"
+        android:layout_width="360dp"
+        android:layout_height="595dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/cafe"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <TextView
+        android:id="@+id/nameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="10dp"
+        android:text="KOKO"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="@id/cafe"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/mapTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=" Indoor Map"
+        android:textColor="@color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/nameTextView"
+        app:layout_constraintStart_toEndOf="@id/nameTextView"
+        app:layout_constraintTop_toTopOf="@+id/nameTextView" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="COUNTER"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:rotation="-61"
+        app:layout_constraintHorizontal_bias="0.015"
+        app:layout_constraintVertical_bias="0.245"
+        app:layout_constraintEnd_toEndOf="@id/cafe"
+        app:layout_constraintStart_toStartOf="@id/cafe"
+        app:layout_constraintTop_toTopOf="@id/cafe"
+        app:layout_constraintBottom_toBottomOf="@id/cafe" />
+
+    <ImageView
+        android:id="@+id/sofa1"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:rotation="-63"
+        android:scaleType="fitCenter"
+        android:src="@drawable/sofa"
+        app:layout_constraintHorizontal_bias="0.095"
+        app:layout_constraintVertical_bias="0.517"
+        app:layout_constraintEnd_toEndOf="@id/cafe"
+        app:layout_constraintStart_toStartOf="@id/cafe"
+        app:layout_constraintTop_toTopOf="@id/cafe"
+        app:layout_constraintBottom_toBottomOf="@id/cafe" />
+
+    <ImageView
+        android:id="@+id/sofa2"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:rotation="117"
+        android:scaleType="fitCenter"
+        android:src="@drawable/sofa"
+        app:layout_constraintHorizontal_bias="0.4"
+        app:layout_constraintVertical_bias="0.601"
+        app:layout_constraintEnd_toEndOf="@id/cafe"
+        app:layout_constraintStart_toStartOf="@id/cafe"
+        app:layout_constraintTop_toTopOf="@id/cafe"
+        app:layout_constraintBottom_toBottomOf="@id/cafe" />
+
+    <ImageView
+        android:id="@+id/sofa3"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:rotation="-63"
+        android:scaleType="fitCenter"
+        android:src="@drawable/sofa"
+        app:layout_constraintHorizontal_bias="0.234"
+        app:layout_constraintVertical_bias="0.368"
+        app:layout_constraintEnd_toEndOf="@id/cafe"
+        app:layout_constraintStart_toStartOf="@id/cafe"
+        app:layout_constraintTop_toTopOf="@id/cafe"
+        app:layout_constraintBottom_toBottomOf="@id/cafe" />
+
+    <ImageView
+        android:id="@+id/sofa4"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:rotation="117"
+        android:scaleType="fitCenter"
+        android:src="@drawable/sofa"
+        app:layout_constraintHorizontal_bias="0.54"
+        app:layout_constraintVertical_bias="0.453"
+        app:layout_constraintEnd_toEndOf="@id/cafe"
+        app:layout_constraintStart_toStartOf="@id/cafe"
+        app:layout_constraintTop_toTopOf="@id/cafe"
+        app:layout_constraintBottom_toBottomOf="@id/cafe" />
+
+    <ImageView
+        android:id="@+id/sofa5"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/sofa"
+        android:rotation="-150"
+        app:layout_constraintHorizontal_bias="0.451"
+        app:layout_constraintVertical_bias="0.2"
+        app:layout_constraintBottom_toBottomOf="@id/cafe"
+        app:layout_constraintEnd_toEndOf="@id/cafe"
+        app:layout_constraintStart_toStartOf="@id/cafe"
+        app:layout_constraintTop_toTopOf="@id/cafe" />
+
+    <ImageView
+        android:id="@+id/sofa6"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/sofa"
+        app:layout_constraintHorizontal_bias="0.91"
+        app:layout_constraintVertical_bias="0.215"
+        app:layout_constraintEnd_toEndOf="@id/cafe"
+        app:layout_constraintStart_toStartOf="@id/cafe"
+        app:layout_constraintTop_toTopOf="@id/cafe"
+        app:layout_constraintBottom_toBottomOf="@id/cafe" />
+
+    <ImageView
+        android:id="@+id/sofa7"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/sofa"
+        app:layout_constraintHorizontal_bias="0.91"
+        app:layout_constraintVertical_bias="0.404"
+        app:layout_constraintBottom_toBottomOf="@id/cafe"
+        app:layout_constraintEnd_toEndOf="@id/cafe"
+        app:layout_constraintStart_toStartOf="@id/cafe"
+        app:layout_constraintTop_toTopOf="@id/cafe" />
+
+    <ImageView
+        android:id="@+id/sofa8"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/sofa"
+        app:layout_constraintHorizontal_bias="0.91"
+        app:layout_constraintVertical_bias="0.594"
+        app:layout_constraintBottom_toBottomOf="@id/cafe"
+        app:layout_constraintEnd_toEndOf="@id/cafe"
+        app:layout_constraintStart_toStartOf="@id/cafe"
+        app:layout_constraintTop_toTopOf="@id/cafe" />
+
+    <ImageView
+        android:id="@+id/sofa9"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/sofa"
+        android:rotation="-90"
+        app:layout_constraintHorizontal_bias="0.02"
+        app:layout_constraintVertical_bias="0.861"
+        app:layout_constraintBottom_toBottomOf="@id/cafe"
+        app:layout_constraintEnd_toEndOf="@id/cafe"
+        app:layout_constraintStart_toStartOf="@id/cafe"
+        app:layout_constraintTop_toTopOf="@id/cafe" />
+
+    <ImageView
+        android:id="@+id/sofa10"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/sofa"
+        android:rotation="90"
+        app:layout_constraintHorizontal_bias="0.307"
+        app:layout_constraintVertical_bias="0.861"
+        app:layout_constraintBottom_toBottomOf="@id/cafe"
+        app:layout_constraintEnd_toEndOf="@id/cafe"
+        app:layout_constraintStart_toStartOf="@id/cafe"
+        app:layout_constraintTop_toTopOf="@id/cafe" />
+
+    <ImageView
+        android:id="@+id/sofa11"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/sofa"
+        android:rotation="-90"
+        app:layout_constraintHorizontal_bias="0.483"
+        app:layout_constraintVertical_bias="0.861"
+        app:layout_constraintBottom_toBottomOf="@id/cafe"
+        app:layout_constraintEnd_toEndOf="@id/cafe"
+        app:layout_constraintStart_toStartOf="@id/cafe"
+        app:layout_constraintTop_toTopOf="@id/cafe" />
+
+    <ImageView
+        android:id="@+id/sofa12"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/sofa"
+        android:rotation="90"
+        app:layout_constraintHorizontal_bias="0.765"
+        app:layout_constraintVertical_bias="0.861"
+        app:layout_constraintBottom_toBottomOf="@id/cafe"
+        app:layout_constraintEnd_toEndOf="@id/cafe"
+        app:layout_constraintStart_toStartOf="@id/cafe"
+        app:layout_constraintTop_toTopOf="@id/cafe" />
+
+    <TextView
+        android:id="@+id/num1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/cafe"
+        app:layout_constraintEnd_toEndOf="@id/cafe"
+        app:layout_constraintHorizontal_bias="0.298"
+        app:layout_constraintStart_toStartOf="@id/cafe"
+        app:layout_constraintTop_toTopOf="@id/cafe"
+        app:layout_constraintVertical_bias="0.555" />
+
+    <TextView
+        android:id="@+id/num2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/cafe"
+        app:layout_constraintEnd_toEndOf="@id/cafe"
+        app:layout_constraintHorizontal_bias="0.410"
+        app:layout_constraintStart_toStartOf="@id/cafe"
+        app:layout_constraintTop_toTopOf="@id/cafe"
+        app:layout_constraintVertical_bias="0.419" />
+
+    <TextView
+        android:id="@+id/num3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/cafe"
+        app:layout_constraintEnd_toEndOf="@id/cafe"
+        app:layout_constraintHorizontal_bias="0.517"
+        app:layout_constraintStart_toStartOf="@id/cafe"
+        app:layout_constraintTop_toTopOf="@id/cafe"
+        app:layout_constraintVertical_bias="0.159" />
+
+    <TextView
+        android:id="@+id/num4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/cafe"
+        app:layout_constraintEnd_toEndOf="@id/cafe"
+        app:layout_constraintHorizontal_bias="0.842"
+        app:layout_constraintStart_toStartOf="@id/cafe"
+        app:layout_constraintTop_toTopOf="@id/cafe"
+        app:layout_constraintVertical_bias="0.305" />
+
+    <TextView
+        android:id="@+id/num5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/cafe"
+        app:layout_constraintEnd_toEndOf="@id/cafe"
+        app:layout_constraintHorizontal_bias="0.842"
+        app:layout_constraintStart_toStartOf="@id/cafe"
+        app:layout_constraintTop_toTopOf="@id/cafe"
+        app:layout_constraintVertical_bias="0.48" />
+
+    <TextView
+        android:id="@+id/num6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/cafe"
+        app:layout_constraintEnd_toEndOf="@id/cafe"
+        app:layout_constraintHorizontal_bias="0.842"
+        app:layout_constraintStart_toStartOf="@id/cafe"
+        app:layout_constraintTop_toTopOf="@id/cafe"
+        app:layout_constraintVertical_bias="0.657" />
+
+    <TextView
+        android:id="@+id/num7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/cafe"
+        app:layout_constraintEnd_toEndOf="@id/cafe"
+        app:layout_constraintHorizontal_bias="0.221"
+        app:layout_constraintStart_toStartOf="@id/cafe"
+        app:layout_constraintTop_toTopOf="@id/cafe"
+        app:layout_constraintVertical_bias="0.833" />
+
+    <TextView
+        android:id="@+id/num8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="0"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/cafe"
+        app:layout_constraintEnd_toEndOf="@id/cafe"
+        app:layout_constraintHorizontal_bias="0.604"
+        app:layout_constraintStart_toStartOf="@id/cafe"
+        app:layout_constraintTop_toTopOf="@id/cafe"
+        app:layout_constraintVertical_bias="0.833" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/mapRefreshButton"
+        android:layout_width="340dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="-20dp"
+        android:background="@drawable/button_custom"
+        android:text="Map Refresh"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textAllCaps="false"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/cafe"
+        app:layout_constraintStart_toStartOf="@id/cafe"
+        app:layout_constraintEnd_toEndOf="@id/cafe"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
