@@ -235,7 +235,7 @@ class PathActivity : AppCompatActivity(), OnMapReadyCallback, OnItemClickListene
     private fun findAll(): List<Cafe> {
         var cafes: List<Cafe> = emptyList()
 
-        val baseUrl = "http://192.168.55.59:8080/"
+        val baseUrl = "http://ec2-43-202-59-190.ap-northeast-2.compute.amazonaws.com:8080/"
 
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrl)
@@ -266,7 +266,7 @@ class PathActivity : AppCompatActivity(), OnMapReadyCallback, OnItemClickListene
     private fun findByRadius(): List<Cafe> {
         var cafes: List<Cafe> = emptyList()
 
-        val baseUrl = "http://192.168.55.59:8080/"
+        val baseUrl = "http://ec2-43-202-59-190.ap-northeast-2.compute.amazonaws.com:8080/"
 
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrl)
