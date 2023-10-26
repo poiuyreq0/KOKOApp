@@ -12,15 +12,10 @@ class NaverMapAPIResult {
     )
     data class ResultTraoptimal(
         val summary: ResultSummary,
-        val path: List<List<Double>>,
-//        val section: List<ResultSection>
+        val path: List<List<Double>>
     )
     data class ResultSummary(
         val distance: Int,
-        val duration: Int,
-//        val taxiFare: Int
+        val duration: Int
     )
-//    data class ResultSection(
-//        val congestion: Int
-//    )
 }
