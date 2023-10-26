@@ -1,8 +1,10 @@
 package com.poiuyreq0.koko
 
-data class Item(
-    val name: String,
-    val value: Int,
-    val lat: Double,
-    val lng: Double
+class Item(
+    var name: String,
+    var distance: Int,
+    var duration: Int,
+    var congestion: Int,
+    var lat: Double,
+    var lng: Double
 )

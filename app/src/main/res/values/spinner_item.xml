@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="spinner_item">
-        <item>최소 거리 순</item>
-        <item>최소 시간 순</item>
+        <item>Distance</item>
+        <item>Duration</item>
+        <item>Congestion</item>
     </string-array>
 </resources>

@@ -7,8 +7,6 @@ import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Spinner
-import androidx.appcompat.widget.AppCompatButton
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.naver.maps.geometry.LatLng
 import com.naver.maps.map.CameraAnimation
@@ -25,15 +23,15 @@ import com.naver.maps.map.util.FusedLocationSource
 import com.poiuyreq0.koko.databinding.ActivityPathBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import kotlin.math.roundToInt
 
-class PathActivity : AppCompatActivity(), OnMapReadyCallback, OnItemClickListener {
+class PathActivity : AppCompatActivity(), OnMapReadyCallback, OnItemClickListener, AdapterView.OnItemSelectedListener {
 
     private lateinit var binding: ActivityPathBinding
 
@@ -46,11 +44,16 @@ class PathActivity : AppCompatActivity(), OnMapReadyCallback, OnItemClickListene
 
     private lateinit var cafes: List<Cafe>
     private lateinit var markers: MutableList<Marker>
-    private var distances: MutableList<Item> = mutableListOf()
-    private var durations: MutableList<Item> = mutableListOf()
+
+    private var items: MutableMap<String, Item> = mutableMapOf()
 
     private val apiKeyID = BuildConfig.API_KEY_ID
     private val apiKey = BuildConfig.API_KEY
+
+    private var spinnerFlag = false
+    private var posFlag = 0
+
+    private lateinit var locationChangeListener: NaverMap.OnLocationChangeListener
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,24 +71,20 @@ class PathActivity : AppCompatActivity(), OnMapReadyCallback, OnItemClickListene
 
         binding.recyclerview.layoutManager = LinearLayoutManager(this)
 
-        val searchButton: AppCompatButton = binding.searchButton
-        val distanceButton: AppCompatButton = binding.distanceButton
-        val durationButton: AppCompatButton = binding.durationButton
-
-        searchButton.setOnClickListener {
-            searchButton.visibility = View.GONE
-            distanceButton.visibility = View.VISIBLE
-            durationButton.visibility = View.VISIBLE
-
-            nonDrawDetectionPaths()
+        ArrayAdapter.createFromResource(
+            this,
+            R.array.spinner_item,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.spinner.adapter = adapter
         }
-        distanceButton.setOnClickListener {
-            distances.sortBy { it.value }
-            binding.recyclerview.adapter = RecyclerViewAdapter(distances, 0, this)
-        }
-        durationButton.setOnClickListener {
-            durations.sortBy { it.value }
-            binding.recyclerview.adapter = RecyclerViewAdapter(durations, 1, this)
+        binding.spinner.onItemSelectedListener = this
+
+        binding.refreshButton.setOnClickListener {
+            CoroutineScope(Dispatchers.Main).launch {
+                listRefresh()
+            }
         }
     }
 
@@ -119,120 +118,96 @@ class PathActivity : AppCompatActivity(), OnMapReadyCallback, OnItemClickListene
         val uiSettings = naverMap.uiSettings
         uiSettings.isLocationButtonEnabled = true
 
-        cafes = findAll()
-
-//        naverMap.setOnMapClickListener { point, coord ->
-//            Log.d("point", "${coord.latitude}, ${coord.longitude}")
-//        }
+        locationChangeListener = NaverMap.OnLocationChangeListener { location ->
+            var flag = true
+            if (flag) {
+                flag = false
+                naverMap.removeOnLocationChangeListener(locationChangeListener)
+            }
+            CoroutineScope(Dispatchers.Main).launch {
+                listRefresh()
+            }
+        }
+        naverMap.addOnLocationChangeListener(locationChangeListener)
     }
 
-    private fun nonDrawDetectionPath(name: String, lat: Double, lng: Double) {
-        path.map = null
+    private suspend fun detectionPath(name: String, endLat: Double, endLng: Double, startLat: Double, startLng: Double, isDraw: Boolean) {
 
-        val baseUrl = "https://naveropenapi.apigw.ntruss.com/map-direction-15/"
+        try {
+            val resultTraoptimals = withContext(Dispatchers.IO) {
+                val baseUrl = "https://naveropenapi.apigw.ntruss.com/map-direction-15/"
+                val retrofit = Retrofit.Builder()
+                    .baseUrl(baseUrl)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build()
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+                val naverMapAPI = retrofit.create(NaverMapAPI::class.java)
 
-        val naverMapAPI = retrofit.create(NaverMapAPI::class.java)
+                val startLocation = "${startLng},${startLat}"
+                val goalLocation = "${endLng},${endLat}"
+                val option = "traoptimal"
 
-        val startLocation ="${locationOverlay.position.longitude},${locationOverlay.position.latitude}"
-        val goalLocation = "${lng},${lat}"
-        val option = "traoptimal"
+                val call = naverMapAPI.getPath(apiKeyID, apiKey, startLocation, goalLocation, option)
+                val response = call.execute()
 
-        val call = naverMapAPI.getPath(apiKeyID, apiKey, startLocation, goalLocation, option)
-
-        call.enqueue(object: Callback<NaverMapAPIResult.ResultResponse> {
-            override fun onResponse(
-                call: Call<NaverMapAPIResult.ResultResponse>,
-                response: Response<NaverMapAPIResult.ResultResponse>
-            ) {
-                val resultTraoptimals = response.body()?.route?.traoptimal ?: emptyList()
-//                val pathContainer: MutableList<LatLng> = mutableListOf()
-                for (resultTraoptimal in resultTraoptimals) {
-                    distances.add(Item(name, resultTraoptimal.summary.distance, lat, lng))
-                    durations.add(Item(name, resultTraoptimal.summary.duration, lat, lng))
-
-//                    for (resultRoutePath in resultTraoptimal.path) {
-//                        pathContainer.add(LatLng(resultRoutePath[1], resultRoutePath[0]))
-//                    }
-                }
-//                path.coords = pathContainer
-//                path.color = Color.BLUE
-//                path.map = naverMap
-//
-//                if (path.coords != null) {
-//                    val cameraUpdate = CameraUpdate.scrollTo(path.coords[0])
-//                        .animate(CameraAnimation.Fly, 1000)
-//                    naverMap.moveCamera(cameraUpdate)
-//                }
+                response.body()?.route?.traoptimal ?: emptyList()
             }
 
-            override fun onFailure(call: Call<NaverMapAPIResult.ResultResponse>, t: Throwable) {
-                Log.e("detectionPath", "onFailure", t)
-            }
-        })
-    }
+            withContext(Dispatchers.Main) {
+                path.map = null
 
-    private fun detectionPath(name: String, lat: Double, lng: Double) {
-        path.map = null
+                if (isDraw) {
+                    // Draw path
+                    Log.d("detectionPath", "Draw path")
+                    val pathContainer: MutableList<LatLng> = mutableListOf()
+                    for (resultTraoptimal in resultTraoptimals) {
+                        for (resultRoutePath in resultTraoptimal.path) {
+                            pathContainer.add(LatLng(resultRoutePath[1], resultRoutePath[0]))
+                        }
+                    }
+                    path.coords = pathContainer
+                    path.color = Color.BLUE
+                    path.map = naverMap
 
-        val baseUrl = "https://naveropenapi.apigw.ntruss.com/map-direction-15/"
+                    if (path.coords != null) {
+                        val cameraUpdate = CameraUpdate.scrollTo(path.coords[0])
+                            .animate(CameraAnimation.Fly, 1000)
+                        naverMap.moveCamera(cameraUpdate)
+                    }
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-
-        val naverMapAPI = retrofit.create(NaverMapAPI::class.java)
-
-        val startLocation ="${locationOverlay.position.longitude},${locationOverlay.position.latitude}"
-        val goalLocation = "${lng},${lat}"
-        val option = "traoptimal"
-
-        val call = naverMapAPI.getPath(apiKeyID, apiKey, startLocation, goalLocation, option)
-
-        call.enqueue(object: Callback<NaverMapAPIResult.ResultResponse> {
-            override fun onResponse(
-                call: Call<NaverMapAPIResult.ResultResponse>,
-                response: Response<NaverMapAPIResult.ResultResponse>
-            ) {
-                val resultTraoptimals = response.body()?.route?.traoptimal ?: emptyList()
-                val pathContainer: MutableList<LatLng> = mutableListOf()
-                for (resultTraoptimal in resultTraoptimals) {
-//                    distances.add(Item(name, resultTraoptimal.summary.distance, lat, lng))
-//                    durations.add(Item(name, resultTraoptimal.summary.duration, lat, lng))
-
-                    for (resultRoutePath in resultTraoptimal.path) {
-                        pathContainer.add(LatLng(resultRoutePath[1], resultRoutePath[0]))
+                } else {
+                    // Process data
+                    Log.d("detectionPath", "Process data")
+                    for (resultTraoptimal in resultTraoptimals) {
+                        items[name]?.apply {
+                            distance = resultTraoptimal.summary.distance
+                            duration = resultTraoptimal.summary.duration
+                            lat = endLat
+                            lng = endLng
+                        }
                     }
                 }
-                path.coords = pathContainer
-                path.color = Color.BLUE
-                path.map = naverMap
-
-                if (path.coords != null) {
-                    val cameraUpdate = CameraUpdate.scrollTo(path.coords[0])
-                        .animate(CameraAnimation.Fly, 1000)
-                    naverMap.moveCamera(cameraUpdate)
-                }
             }
 
-            override fun onFailure(call: Call<NaverMapAPIResult.ResultResponse>, t: Throwable) {
-                Log.e("detectionPath", "onFailure", t)
-            }
-        })
-    }
-
-    private fun nonDrawDetectionPaths() {
-        for (marker in markers) {
-            nonDrawDetectionPath(marker.captionText, marker.position.latitude, marker.position.longitude)
+        } catch (e: Exception) {
+            Log.e("detectionPath", "Error in detectionPath", e)
         }
     }
 
-    private fun findAll(): List<Cafe> {
+    private suspend fun detectionPaths(markers: MutableList<Marker>) {
+        val startLat = locationOverlay.position.latitude
+        val startLng = locationOverlay.position.longitude
+        val marker = markers[0]
+        Log.d("locationChangeListener", "detectionPaths Inside")
+        val jobs = markers.map { marker ->
+            CoroutineScope(Dispatchers.Main).async {
+                detectionPath(marker.captionText, marker.position.latitude, marker.position.longitude, startLat, startLng, false)
+            }
+        }
+        jobs.awaitAll()
+    }
+
+    private suspend fun findAll(): List<Cafe> {
         var cafes: List<Cafe> = emptyList()
 
         val baseUrl = "http://ec2-43-202-59-190.ap-northeast-2.compute.amazonaws.com:8080/"
@@ -244,61 +219,64 @@ class PathActivity : AppCompatActivity(), OnMapReadyCallback, OnItemClickListene
 
         val cafesAPI = retrofit.create(CafesAPI::class.java)
 
-        val call = cafesAPI.findAllApi()
+        val response = cafesAPI.findAllApi().execute()
+        cafes = response.body() ?: emptyList()
 
-        call.enqueue(object: Callback<List<Cafe>> {
-            override fun onResponse(
-                call: Call<List<Cafe>>,
-                response: Response<List<Cafe>>
-            ) {
-                cafes = response.body() ?: emptyList()
-                addMarkers(cafes)
-            }
-
-            override fun onFailure(call: Call<List<Cafe>>, t: Throwable) {
-                Log.e("findAll", "onFailure", t)
-            }
-        })
+        for (cafe in cafes) {
+            items[cafe.name] = Item(
+                cafe.name,
+                0,
+                0,
+                (cafe.positions.count { it >= 1L }.toDouble() / cafe.positions.size * 100).roundToInt(),
+                cafe.coordinate.latitude,
+                cafe.coordinate.longitude
+            )
+        }
 
         return cafes
     }
 
-    private fun findByRadius(): List<Cafe> {
-        var cafes: List<Cafe> = emptyList()
+    private fun updateRecyclerview(posFlag: Int) {
+        when (posFlag) {
+            0 -> {
+                val sortedItems = items.toList().sortedBy { (_, value) -> value.distance }.toMap().toMutableMap()
+                binding.recyclerview.adapter = RecyclerViewAdapter(sortedItems, posFlag, this)
+            }
+            1 -> {
+                val sortedItems = items.toList().sortedBy { (_, value) -> value.duration }.toMap().toMutableMap()
+                binding.recyclerview.adapter = RecyclerViewAdapter(sortedItems, posFlag, this)
+            }
+            else -> {
+                val sortedItems = items.toList().sortedBy { (_, value) -> value.congestion }.toMap().toMutableMap()
+                binding.recyclerview.adapter = RecyclerViewAdapter(sortedItems, posFlag, this)
+            }
+        }
+    }
 
-        val baseUrl = "http://ec2-43-202-59-190.ap-northeast-2.compute.amazonaws.com:8080/"
+    private suspend fun listRefresh() {
+        binding.refreshButton.isEnabled = false
 
-        val retrofit = Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
+        items = mutableMapOf()
 
-        val cafesAPI = retrofit.create(CafesAPI::class.java)
+        val job = CoroutineScope(Dispatchers.Main).async {
+            cafes = withContext(Dispatchers.IO) {
+                findAll()
+            }
 
-        val userLatitude = locationOverlay.position.latitude
-        val userLongitude = locationOverlay.position.longitude
-        val radius = 10.0
-
-        val call = cafesAPI.findByRadiusApi(userLatitude, userLongitude, radius)
-
-        call.enqueue(object: Callback<List<Cafe>> {
-            override fun onResponse(
-                call: Call<List<Cafe>>,
-                response: Response<List<Cafe>>
-            ) {
-                cafes = response.body() ?: emptyList()
+            markers = withContext(Dispatchers.Main) {
                 addMarkers(cafes)
             }
 
-            override fun onFailure(call: Call<List<Cafe>>, t: Throwable) {
-                Log.e("findByRadius", "onFailure", t)
-            }
-        })
+            detectionPaths(markers)
 
-        return cafes
+            updateRecyclerview(posFlag)
+        }
+        job.await()
+
+        binding.refreshButton.isEnabled = true
     }
 
-    private fun addMarkers(cafes: List<Cafe>) {
+    private suspend fun addMarkers(cafes: List<Cafe>): MutableList<Marker> {
         var markers: MutableList<Marker> = mutableListOf()
 
         for (i in cafes.indices) {
@@ -309,23 +287,49 @@ class PathActivity : AppCompatActivity(), OnMapReadyCallback, OnItemClickListene
             markers[i].onClickListener = markerClickListener
         }
 
-        this.markers = markers
+        return markers
     }
 
     private val markerClickListener = Overlay.OnClickListener { o ->
         val m: Marker = o as Marker
+        val name = m.captionText
+        val endLat = m.position.latitude
+        val endLng = m.position.longitude
+        val startLat = locationOverlay.position.latitude
+        val startLng = locationOverlay.position.longitude
 
-        detectionPath(m.captionText, m.position.latitude, m.position.longitude)
+        CoroutineScope(Dispatchers.Main).async {
+            detectionPath(name, endLat, endLng, startLat, startLng, true)
+        }
 
         true
     }
 
-    override fun onItemClick(position: Int, dataSet: MutableList<Item>) {
-        val name = dataSet[position].name
-        val lat = dataSet[position].lat
-        val lng = dataSet[position].lng
+    override fun onItemClick(position: Int, dataSet: MutableMap<String, Item>) {
+        val dataSetList = items.values.toList()
 
-        detectionPath(name, lat, lng)
+        val name = dataSetList[position].name
+        val endLat = dataSetList[position].lat
+        val endLng = dataSetList[position].lng
+        val startLat = locationOverlay.position.latitude
+        val startLng = locationOverlay.position.longitude
+
+        CoroutineScope(Dispatchers.Main).async {
+            detectionPath(name, endLat, endLng, startLat, startLng, true)
+        }
+    }
+
+    override fun onItemSelected(parent: AdapterView<*>, view: View?, pos: Int, id: Long) {
+        if (!spinnerFlag) {
+            spinnerFlag = true
+            return
+        }
+
+        posFlag = pos
+        updateRecyclerview(posFlag)
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {
     }
 
     companion object {
