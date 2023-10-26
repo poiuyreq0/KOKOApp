@@ -85,7 +85,6 @@ class MapActivity : AppCompatActivity() {
     private fun findPositions(name: String): List<Long> {
         var positions: List<Long> = emptyList()
 
-//        val baseUrl = "http://192.168.55.59:8080/"
         val baseUrl = "http://ec2-43-202-59-190.ap-northeast-2.compute.amazonaws.com:8080/"
 
         val retrofit = Retrofit.Builder()

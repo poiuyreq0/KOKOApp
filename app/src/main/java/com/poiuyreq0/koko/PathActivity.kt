@@ -283,6 +283,7 @@ class PathActivity : AppCompatActivity(), OnMapReadyCallback, OnItemClickListene
             markers.add(Marker())
             markers[i].position = LatLng(cafes[i].coordinate.latitude, cafes[i].coordinate.longitude)
             markers[i].captionText = cafes[i].name
+            markers[i].captionTextSize = 16f
             markers[i].map = naverMap
             markers[i].onClickListener = markerClickListener
         }
