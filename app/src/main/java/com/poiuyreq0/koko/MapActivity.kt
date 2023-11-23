@@ -16,8 +16,6 @@ class MapActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMapBinding
 
-//    private lateinit var averageRef: DatabaseReference
-
     private val sofaLength: Int = 12
 
     private lateinit var sofaArray: Array<ImageView>
@@ -33,9 +31,6 @@ class MapActivity : AppCompatActivity() {
             binding.sofa4, binding.sofa5, binding.sofa6,
             binding.sofa7, binding.sofa8, binding.sofa9,
             binding.sofa10, binding.sofa11, binding.sofa12)
-
-//        averageRef = Firebase.database.getReference("average")
-//        averageRef.addValueEventListener(valueEventListener)
 
         val name = intent.getStringExtra("name") ?: ""
         binding.nameTextView.text = name
@@ -75,7 +70,7 @@ class MapActivity : AppCompatActivity() {
     private fun findPositions(name: String): List<Long> {
         var positions: List<Long> = emptyList()
 
-        val baseUrl = "http://ec2-43-202-59-190.ap-northeast-2.compute.amazonaws.com:8080/"
+        val baseUrl = "http://ec2-3-34-131-7.ap-northeast-2.compute.amazonaws.com/"
 
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrl)
@@ -103,16 +98,4 @@ class MapActivity : AppCompatActivity() {
 
         return positions
     }
-
-//    private val valueEventListener = object : ValueEventListener {
-//        override fun onDataChange(dataSnapshot: DataSnapshot) {
-//            val avgArray = dataSnapshot.value as? List<Int> ?: List(sofaLength) { 0 }
-//
-//            updateNumber(avgArray)
-//        }
-//
-//        override fun onCancelled(databaseError: DatabaseError) {
-//            Log.w(TAG, "loadData:onCancelled", databaseError.toException())
-//        }
-//    }
 }

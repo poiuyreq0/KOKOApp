@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:layout_marginStart="10dp"
-        android:text="Find the path"
+        android:text="주변 카페 찾아보기"
         android:textSize="24sp"
         android:textStyle="bold"
         android:textColor="@color/black"

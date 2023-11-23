@@ -50,6 +50,7 @@ class RecyclerViewAdapter(
         viewHolder.order.text = (position + 1).toString() + "."
         viewHolder.name.text = dataSetList[position].name
 
+        // 항목별(거리, 시간, 혼잡도) 처리
         if (pos==0) {
             viewHolder.number.text = String.format("%.2f", (dataSetList[position].distance / 1000.0))
             viewHolder.unit.text = "km"
@@ -59,24 +60,26 @@ class RecyclerViewAdapter(
             val hours = seconds / 3600
             val minutes = (seconds % 3600) / 60
 
-            viewHolder.number.text = hours.toString() + "h "
-            viewHolder.unit.text = minutes.toString() + "m"
+            viewHolder.number.text = hours.toString() + "시간 "
+            viewHolder.unit.text = minutes.toString() + "분"
 
         } else {
             viewHolder.number.text = congestion.toString()
             viewHolder.unit.text = "%"
         }
 
-        if (congestion > 90) {
+        // 혼잡도별 색깔 표시
+        if (congestion >= 90) {
             viewHolder.itemView.setBackgroundColor(ContextCompat.getColor(viewHolder.itemView.context, R.color.red))
-        } else if (congestion > 60) {
+        } else if (congestion >= 60) {
             viewHolder.itemView.setBackgroundColor(ContextCompat.getColor(viewHolder.itemView.context, R.color.orange))
-        } else if (congestion > 30) {
+        } else if (congestion >= 30) {
             viewHolder.itemView.setBackgroundColor(ContextCompat.getColor(viewHolder.itemView.context, R.color.yellow))
         } else {
             viewHolder.itemView.setBackgroundColor(ContextCompat.getColor(viewHolder.itemView.context, R.color.green))
         }
 
+        // 실내 지도 버튼 처리
         viewHolder.map.setOnClickListener {
             val intent = Intent(viewHolder.itemView.context, MapActivity::class.java)
 
@@ -85,6 +88,7 @@ class RecyclerViewAdapter(
             viewHolder.itemView.context.startActivity(intent)
         }
 
+        // 항목 클릭 시 길 찾기
         viewHolder.itemView.setOnClickListener {
             if (position != RecyclerView.NO_POSITION) {
                 itemClickListener.onItemClick(position, dataSet)

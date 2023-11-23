@@ -210,7 +210,7 @@ class PathActivity : AppCompatActivity(), OnMapReadyCallback, OnItemClickListene
     private suspend fun findAll(): List<Cafe> {
         var cafes: List<Cafe> = emptyList()
 
-        val baseUrl = "http://ec2-43-202-59-190.ap-northeast-2.compute.amazonaws.com:8080/"
+        val baseUrl = "http://ec2-3-34-131-7.ap-northeast-2.compute.amazonaws.com/"
 
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrl)
