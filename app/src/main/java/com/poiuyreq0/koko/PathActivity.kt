@@ -119,13 +119,11 @@ class PathActivity : AppCompatActivity(), OnMapReadyCallback, OnItemClickListene
         uiSettings.isLocationButtonEnabled = true
 
         locationChangeListener = NaverMap.OnLocationChangeListener { location ->
-            var flag = true
-            if (flag) {
-                flag = false
-                naverMap.removeOnLocationChangeListener(locationChangeListener)
-            }
+            naverMap.removeOnLocationChangeListener(locationChangeListener)
+
             CoroutineScope(Dispatchers.Main).launch {
                 listRefresh()
+                naverMap.moveCamera(CameraUpdate.zoomTo(12.0))
             }
         }
         naverMap.addOnLocationChangeListener(locationChangeListener)
@@ -307,7 +305,7 @@ class PathActivity : AppCompatActivity(), OnMapReadyCallback, OnItemClickListene
     }
 
     override fun onItemClick(position: Int, dataSet: MutableMap<String, Item>) {
-        val dataSetList = items.values.toList()
+        val dataSetList = dataSet.values.toList()
 
         val name = dataSetList[position].name
         val endLat = dataSetList[position].lat
